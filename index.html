@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M/SALAM - Ultimate Store</title>
+    <title>M/SALAM - Real Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- CSS STYLES --- */
@@ -13,98 +13,78 @@
         /* HEADER */
         header { background-color: #2874f0; position: sticky; top: 0; z-index: 1000; padding: 15px 0; color: white; }
         .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-        
-        /* Logo */
         .logo { font-size: 24px; font-weight: 900; font-style: italic; color: #fff; text-decoration: none; cursor: pointer; letter-spacing: 1px; }
         .logo span { color: #ffe500; } 
 
-        /* DESKTOP Search Bar */
+        /* SEARCH BAR */
         .search-bar { flex-grow: 1; margin: 0 30px; display: flex; max-width: 600px; position: relative; }
         .search-bar input { width: 100%; padding: 10px; border: none; border-radius: 2px 0 0 2px; outline: none; color: #333; }
         .search-bar button { padding: 10px 20px; background-color: #fff; color: #2874f0; border: none; cursor: pointer; border-radius: 0 2px 2px 0; }
 
-        /* User & Cart Options */
+        /* ICONS & MENUS */
         .nav-options { display: flex; align-items: center; gap: 25px; font-weight: bold; }
         .login-btn { background: white; color: #2874f0; padding: 5px 20px; border: 1px solid #fff; cursor: pointer; font-weight: bold; border-radius: 2px; }
         .user-name { cursor: pointer; display: none; } 
-        
         .cart-btn { position: relative; cursor: pointer; display: flex; align-items: center; gap: 5px; }
         .cart-count { position: absolute; top: -8px; left: 8px; background: #ff6161; border: 1px solid #fff; color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; }
 
-        /* MOBILE SEARCH BAR (New Addition) */
-        .mobile-search-container {
-            display: none; /* Desktop par nahi dikhega */
-            background-color: #2874f0;
-            padding: 0 10px 10px 10px;
-            position: sticky;
-            top: 60px; /* Header height ke neeche */
-            z-index: 999;
-        }
-        .mobile-search-box {
-            display: flex;
-            width: 100%;
-            background: white;
-            border-radius: 2px;
-        }
-        .mobile-search-box input {
-            width: 100%; padding: 10px; border: none; outline: none;
-        }
-        .mobile-search-box button {
-            padding: 10px; background: white; border: none; color: #2874f0;
-        }
+        /* MOBILE SEARCH */
+        .mobile-search-container { display: none; background-color: #2874f0; padding: 0 10px 10px 10px; position: sticky; top: 60px; z-index: 999; }
+        .mobile-search-box { display: flex; width: 100%; background: white; border-radius: 2px; }
+        .mobile-search-box input { width: 100%; padding: 10px; border: none; outline: none; }
+        .mobile-search-box button { padding: 10px; background: white; border: none; color: #2874f0; }
 
-        /* CATEGORIES STRIP */
+        /* CATEGORIES */
         .categories { display: flex; gap: 10px; overflow-x: auto; background: white; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); justify-content: center; }
         .cat-item { text-align: center; cursor: pointer; min-width: 80px; padding: 5px; transition: 0.2s; }
         .cat-item:hover { color: #2874f0; }
-        .cat-img { width: 50px; height: 50px; border-radius: 50%; background: #e0e0e0; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .cat-img { width: 50px; height: 50px; border-radius: 50%; background: #fff; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid #ddd; }
         .cat-img img { width: 100%; height: 100%; object-fit: cover; }
         .cat-name { font-size: 12px; font-weight: bold; }
 
-        /* PRODUCT GRID */
-        .product-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 15px; max-width: 1200px; margin: 0 auto; }
-        .product-card { background: white; border-radius: 4px; padding: 15px; cursor: pointer; transition: transform 0.2s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        /* PRODUCT CARDS */
+        .product-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; padding: 10px; max-width: 1200px; margin: 0 auto; }
+        .product-card { background: white; border-radius: 4px; padding: 10px; cursor: pointer; transition: transform 0.2s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
         
-        .prod-img-box { height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-        .prod-img-box img { max-height: 100%; max-width: 100%; object-fit: contain; }
+        /* IMAGE STYLING (Real Photos) */
+        .prod-img-box { height: 160px; width: 100%; margin-bottom: 10px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .prod-img-box img { max-height: 100%; max-width: 100%; object-fit: contain; transition: 0.3s; }
+        .product-card:hover img { transform: scale(1.05); }
 
-        .brand-tag { font-size: 10px; color: #878787; text-transform: uppercase; font-weight: bold; }
-        .prod-title { font-size: 14px; color: #212121; margin: 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .prod-price { font-size: 18px; font-weight: bold; color: #212121; }
-        .prod-discount { font-size: 12px; color: #388e3c; font-weight: bold; margin-left: 10px; }
+        .brand-tag { font-size: 11px; color: #878787; text-transform: uppercase; font-weight: bold; margin-bottom: 3px; }
+        .prod-title { font-size: 14px; color: #212121; font-weight: 500; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .prod-price { font-size: 16px; font-weight: bold; color: #212121; }
+        .prod-discount { font-size: 12px; color: #388e3c; font-weight: bold; margin-left: 5px; }
         
         .btn-row { display: flex; gap: 5px; margin-top: 10px; }
-        .add-cart-btn { flex: 1; padding: 8px; border: 1px solid #ff9f00; background: white; color: #ff9f00; font-weight: bold; cursor: pointer; }
-        .buy-now-btn { flex: 1; padding: 8px; border: none; background: #fb641b; color: white; font-weight: bold; cursor: pointer; }
+        .add-cart-btn { flex: 1; padding: 8px; border: 1px solid #ff9f00; background: white; color: #ff9f00; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .buy-now-btn { flex: 1; padding: 8px; border: none; background: #fb641b; color: white; font-weight: bold; cursor: pointer; font-size: 12px;}
 
-        /* MODALS (Login, Cart, Order) */
+        /* MODALS */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 95%; max-width: 500px; padding: 20px; border-radius: 5px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .modal-content { background: white; width: 95%; max-width: 400px; padding: 20px; border-radius: 5px; max-height: 90vh; overflow-y: auto; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #333; }
-
-        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
-        .cart-total { font-size: 20px; font-weight: bold; margin-top: 20px; text-align: right; border-top: 2px solid #eee; padding-top: 10px; }
-        .checkout-btn { width: 100%; background: #fb641b; color: white; padding: 15px; border: none; font-size: 16px; font-weight: bold; margin-top: 15px; cursor: pointer; }
         .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; }
 
-        /* Bottom Nav */
+        /* CART Styles */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
+        .cart-total { font-size: 18px; font-weight: bold; margin-top: 20px; text-align: right; border-top: 2px solid #eee; padding-top: 10px; }
+        .checkout-btn { width: 100%; background: #fb641b; color: white; padding: 12px; border: none; font-size: 16px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+
+        /* MOBILE NAV & RESPONSIVE */
         .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); justify-content: space-around; padding: 8px 0; z-index: 999; }
         .nav-item { text-align: center; font-size: 10px; color: #555; cursor: pointer; }
         .nav-item i { font-size: 18px; display: block; margin-bottom: 3px; }
 
-        /* RESPONSIVE CSS (The Fix) */
         @media (max-width: 768px) {
             header { padding: 10px 0; }
-            .search-bar { display: none; } /* Hide DESKTOP search */
-            .mobile-search-container { display: block; } /* Show MOBILE search */
-            
-            .nav-options { display: none; } /* Hide desktop menu */
+            .search-bar { display: none; }
+            .mobile-search-container { display: block; }
+            .nav-options { display: none; }
             .bottom-nav { display: flex; }
             .product-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 8px; }
             .add-cart-btn { display: none; } 
-            
-            /* Logo chota karo mobile pe */
             .logo { font-size: 20px; margin-left: 10px;}
         }
     </style>
@@ -147,23 +127,23 @@
 
     <div class="categories">
         <div class="cat-item" onclick="loadProducts('mobile')">
-            <div class="cat-img"><img src="https://placehold.co/100x100/3498db/FFF?text=Mobile" alt="Mobile"></div>
+            <div class="cat-img"><img src="https://cdn-icons-png.flaticon.com/512/644/644458.png" alt="Mobile"></div>
             <div class="cat-name">Mobiles</div>
         </div>
         <div class="cat-item" onclick="loadProducts('fashion')">
-            <div class="cat-img"><img src="https://placehold.co/100x100/e74c3c/FFF?text=Fashion" alt="Fashion"></div>
+            <div class="cat-img"><img src="https://cdn-icons-png.flaticon.com/512/3159/3159614.png" alt="Fashion"></div>
             <div class="cat-name">Fashion</div>
         </div>
         <div class="cat-item" onclick="loadProducts('tv')">
-            <div class="cat-img"><img src="https://placehold.co/100x100/2c3e50/FFF?text=TV" alt="TV"></div>
+            <div class="cat-img"><img src="https://cdn-icons-png.flaticon.com/512/3659/3659898.png" alt="TV"></div>
             <div class="cat-name">TVs</div>
         </div>
         <div class="cat-item" onclick="loadProducts('beauty')">
-            <div class="cat-img"><img src="https://placehold.co/100x100/e056fd/FFF?text=Beauty" alt="Beauty"></div>
+            <div class="cat-img"><img src="https://cdn-icons-png.flaticon.com/512/1940/1940922.png" alt="Beauty"></div>
             <div class="cat-name">Beauty</div>
         </div>
         <div class="cat-item" onclick="loadProducts('shoes')">
-            <div class="cat-img"><img src="https://placehold.co/100x100/f39c12/FFF?text=Shoes" alt="Shoes"></div>
+            <div class="cat-img"><img src="https://cdn-icons-png.flaticon.com/512/2589/2589903.png" alt="Shoes"></div>
             <div class="cat-name">Shoes</div>
         </div>
     </div>
@@ -223,58 +203,89 @@
     </div>
 
     <script>
-        // Brands & Data
+        // Brands Configuration
         const brands = {
-            'mobile': ['Apple', 'Samsung', 'Oppo', 'Vivo', 'Xiaomi', 'Realme', 'OnePlus'],
-            'fashion': ['Nike', 'Adidas', 'Puma', 'Zara', 'Gucci', 'Levis', 'H&M'],
-            'tv': ['Sony', 'LG', 'Samsung', 'Mi', 'OnePlus', 'Vu'],
-            'beauty': ['Lakme', 'Maybelline', 'Loreal', 'Nivea', 'Mamaearth'],
-            'shoes': ['Nike', 'Adidas', 'Reebok', 'Bata', 'Puma', 'Woodland']
+            'mobile': ['Apple', 'Samsung', 'Oppo', 'Vivo', 'Realme'],
+            'fashion': ['Nike', 'Adidas', 'Zara', 'H&M', 'Levis'],
+            'tv': ['Sony', 'LG', 'Samsung', 'OnePlus'],
+            'beauty': ['Lakme', 'Loreal', 'Nivea', 'Maybelline'],
+            'shoes': ['Nike', 'Adidas', 'Puma', 'Bata', 'Woodland']
         };
 
-        const colors = ['2874f0', '8e44ad', '2ecc71', 'e74c3c', 'f39c12', '34495e'];
+        // --- REAL IMAGE LINKS (Asli Photo Logic) ---
+        // Maine internet se kuch clean aur asli dikhne wali images ke link dale hain
+        const categoryImages = {
+            'mobile': [
+                'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80', // Phone 1
+                'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=400&q=80', // Phone 2
+                'https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=400&q=80'  // Phone 3
+            ],
+            'fashion': [
+                'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=400&q=80', // Shirt
+                'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=400&q=80', // Jacket
+                'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=400&q=80'  // T-shirt
+            ],
+            'tv': [
+                'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=400&q=80', // TV 1
+                'https://images.unsplash.com/photo-1552975084-6e027cd34569?auto=format&fit=crop&w=400&q=80'  // TV 2
+            ],
+            'beauty': [
+                'https://images.unsplash.com/photo-1596462502278-27bfdd403348?auto=format&fit=crop&w=400&q=80', // Cosmetics
+                'https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=400&q=80'  // Bottle
+            ],
+            'shoes': [
+                'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80', // Red Shoe
+                'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=400&q=80', // Green Shoe
+                'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=400&q=80'  // Puma style
+            ]
+        };
+
         let products = [];
         let cart = [];
         let isLoggedIn = false;
         let currentUser = "";
 
-        // Generate Data
+        // DATA GENERATION (With Real Photos)
         function generateData() {
             products = [];
             const categories = Object.keys(brands);
             categories.forEach(cat => {
-                for(let i=1; i<=200; i++) {
+                for(let i=1; i<=150; i++) {
                     const brand = brands[cat][Math.floor(Math.random() * brands[cat].length)];
-                    const color = colors[Math.floor(Math.random() * colors.length)];
-                    const imgUrl = `https://placehold.co/400x400/${color}/FFFFFF?text=${brand}`;
+                    
+                    // Randomly pick a REAL image from the list above
+                    const imageList = categoryImages[cat];
+                    const randomImg = imageList[Math.floor(Math.random() * imageList.length)];
 
                     products.push({
                         id: Date.now() + Math.random(),
                         category: cat,
                         brand: brand,
-                        name: `${brand} ${cat} Pro ${i}`,
-                        price: Math.floor(Math.random() * 50000) + 999,
-                        image: imgUrl
+                        name: `${brand} ${cat} Pro Max ${i}`,
+                        price: Math.floor(Math.random() * 40000) + 1500,
+                        image: randomImg // Asli photo URL
                     });
                 }
             });
             loadProducts('all');
         }
 
-        // Display Products
+        // DISPLAY FUNCTION
         function loadProducts(filter) {
             const grid = document.getElementById('productGrid');
             grid.innerHTML = "";
             window.scrollTo(0,0);
 
             let filtered = (filter === 'all') ? products : products.filter(p => p.category === filter);
-            filtered = filtered.sort(() => 0.5 - Math.random()).slice(0, 100);
+            filtered = filtered.sort(() => 0.5 - Math.random()).slice(0, 80);
 
             filtered.forEach(p => {
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
-                    <div class="prod-img-box"><img src="${p.image}" alt="${p.brand}"></div>
+                    <div class="prod-img-box">
+                        <img src="${p.image}" alt="${p.name}">
+                    </div>
                     <div class="brand-tag">${p.brand}</div>
                     <div class="prod-title">${p.name}</div>
                     <div class="prod-price">₹${p.price.toLocaleString()} <span class="prod-discount">20% Off</span></div>
@@ -287,18 +298,12 @@
             });
         }
 
-        // --- FIXED SEARCH FUNCTION ---
+        // --- SEARCH FUNCTION ---
         function searchProduct() {
-            // Check both Desktop input and Mobile input
             let query = document.getElementById('searchInput').value.toLowerCase();
-            if(!query) {
-                query = document.getElementById('mobileSearchInput').value.toLowerCase();
-            }
+            if(!query) query = document.getElementById('mobileSearchInput').value.toLowerCase();
 
-            if(!query) {
-                alert("Please type something to search!");
-                return;
-            }
+            if(!query) { alert("Please type something!"); return; }
 
             const grid = document.getElementById('productGrid');
             grid.innerHTML = "";
@@ -326,19 +331,17 @@
             });
         }
 
-        // Cart & Buy Logic
+        // CART & LOGIC
         function addToCart(pid) {
             const item = products.find(p => p.id == pid);
             cart.push(item);
             updateCartUI();
-            alert("Added to Cart!");
+            alert("Item Added to Cart");
         }
-
         function updateCartUI() {
             document.getElementById('cartBadge').innerText = cart.length;
             document.getElementById('mobileCartCount').innerText = `(${cart.length})`;
         }
-
         function openCart() {
             const list = document.getElementById('cartItemsList');
             const totalDisplay = document.getElementById('cartTotalDisplay');
@@ -352,7 +355,10 @@
                     const div = document.createElement('div');
                     div.className = 'cart-item';
                     div.innerHTML = `
-                        <div><b>${item.name}</b><br>₹${item.price}</div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${item.image}" style="width:40px; height:40px; object-fit:contain;">
+                            <div><b>${item.name}</b><br>₹${item.price}</div>
+                        </div>
                         <button onclick="removeFromCart(${index})" style="color:red;border:none;background:none;"><i class="fas fa-trash"></i></button>
                     `;
                     list.appendChild(div);
@@ -361,31 +367,21 @@
             totalDisplay.innerText = "Total: ₹" + total.toLocaleString();
             document.getElementById('cartModal').style.display = 'flex';
         }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            openCart();
-            updateCartUI();
-        }
-
+        function removeFromCart(index) { cart.splice(index, 1); openCart(); updateCartUI(); }
         function buyNow(pid) { addToCart(pid); openCart(); }
-
         function checkoutProcess() {
             if(cart.length === 0) { alert("Cart Empty"); return; }
             if(!isLoggedIn) { alert("Please Login First"); closeModal('cartModal'); openLoginModal(); } 
             else { closeModal('cartModal'); document.getElementById('orderModal').style.display = 'flex'; }
         }
-
         function confirmOrder() {
             document.getElementById('orderStep1').style.display = 'none';
             document.getElementById('orderStep2').style.display = 'block';
             document.getElementById('orderUserName').innerText = currentUser;
             cart = []; updateCartUI();
         }
-
         function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
         function performLogin() {
             const name = document.getElementById('loginUser').value;
             if(name) {
@@ -394,10 +390,8 @@
                 document.getElementById('userProfile').style.display = 'block';
                 document.getElementById('userProfile').innerHTML = `Hi, ${name}`;
                 closeModal('loginModal');
-                alert("Login Success!");
             }
         }
-
         function logout() {
             if(confirm("Logout?")) {
                 isLoggedIn = false; currentUser = "";
