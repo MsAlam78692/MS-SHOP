@@ -11,12 +11,14 @@
         body { background-color: #f1f3f6; padding-bottom: 70px; }
 
         /* HEADER */
-        header { background-color: #2874f0; position: sticky; top: 0; z-index: 1000; padding: 15px 0; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        header { background-color: #2874f0; position: sticky; top: 0; z-index: 1000; padding: 10px 0; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
         
-        /* LOGO CHANGED TO PHONE NUMBER */
-        .logo { font-size: 22px; font-weight: 900; font-style: italic; color: #fff; text-decoration: none; cursor: pointer; letter-spacing: 1px; }
-        .logo span { color: #ffe500; } 
+        /* --- NEW LOGO STYLE (M/SALAM + NUMBER) --- */
+        .logo-container { cursor: pointer; display: flex; flex-direction: column; justify-content: center; }
+        .logo-text { font-size: 22px; font-weight: 900; font-style: italic; color: #fff; line-height: 1; letter-spacing: 1px; }
+        .logo-text span { color: #ffe500; } 
+        .logo-sub { font-size: 11px; color: #fff; font-weight: 600; margin-top: 2px; letter-spacing: 1px; opacity: 0.9; }
 
         /* SEARCH BAR */
         .search-bar { flex-grow: 1; margin: 0 30px; display: flex; max-width: 600px; position: relative; }
@@ -108,7 +110,7 @@
             .bottom-nav { display: flex; }
             .categories { justify-content: flex-start; }
             .product-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 8px; }
-            .logo { font-size: 20px; margin-left: 10px;}
+            .logo-text { font-size: 20px; } /* Mobile logo size */
         }
     </style>
 </head>
@@ -124,7 +126,10 @@
 
     <header>
         <div class="navbar">
-            <div class="logo" onclick="renderProducts('all')">9110050887</div>
+            <div class="logo-container" onclick="renderProducts('all')">
+                <div class="logo-text">M/SALAM <span>Plus</span></div>
+                <div class="logo-sub"><i class="fas fa-phone-alt" style="font-size:9px;"></i> 9110050887</div>
+            </div>
             
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search for products, brands...">
@@ -304,143 +309,3 @@
             let list = (filter === 'all') ? products : products.filter(p => p.category === filter);
             list = list.sort(() => 0.5 - Math.random());
             list.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'product-card';
-                div.onclick = () => openProductModal(p);
-                div.innerHTML = `
-                    <div class="prod-img-box"><img src="${p.image}"></div>
-                    <div class="brand-tag">${p.brand}</div>
-                    <div class="prod-title">${p.name}</div>
-                    <div class="rating-box">${p.rating}★</div>
-                    <div class="prod-price">₹${p.price.toLocaleString()}</div>
-                    <button class="view-btn">View Details</button>
-                `;
-                grid.appendChild(div);
-            });
-        }
-
-        function searchProduct() {
-            let q = document.getElementById('searchInput').value.toLowerCase();
-            if(!q) q = document.getElementById('mobileSearchInput').value.toLowerCase();
-            if(!q) { alert("Please type something"); return; }
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = "";
-            const res = products.filter(p => p.name.toLowerCase().includes(q) || p.tags.includes(q));
-            if(res.length === 0) { grid.innerHTML = "<h3 style='padding:20px;'>No results found.</h3>"; return; }
-            res.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'product-card';
-                div.onclick = () => openProductModal(p);
-                div.innerHTML = `
-                    <div class="prod-img-box"><img src="${p.image}"></div>
-                    <div class="brand-tag">${p.brand}</div>
-                    <div class="prod-title">${p.name}</div>
-                    <div class="prod-price">₹${p.price.toLocaleString()}</div>
-                    <button class="view-btn">View</button>
-                `;
-                grid.appendChild(div);
-            });
-        }
-
-        function openProductModal(p) {
-            currentProduct = p;
-            document.getElementById('productModal').style.display = 'flex';
-            document.getElementById('modalImg').src = p.image;
-            document.getElementById('modalTitle').innerText = p.name;
-            document.getElementById('modalRating').innerText = p.rating + " ★";
-            document.getElementById('modalPrice').innerText = "₹" + p.price.toLocaleString();
-            let specs = "";
-            for(let key in p.specs) specs += `<tr><td class="specs-key">${key}</td><td>${p.specs[key]}</td></tr>`;
-            document.getElementById('modalSpecs').innerHTML = specs;
-        }
-
-        function addToCartFromModal() {
-            cart.push(currentProduct);
-            updateCartUI();
-            closeModal('productModal');
-            alert("Added to Cart!");
-        }
-
-        function buyNowFromModal() { addToCartFromModal(); openCart(); }
-        function updateCartUI() { document.getElementById('cartBadge').innerText = cart.length; document.getElementById('mobCartCount').innerText = `(${cart.length})`; }
-        function openCart() {
-            const list = document.getElementById('cartList');
-            list.innerHTML = "";
-            let total = 0;
-            if(cart.length === 0) list.innerHTML = "<p style='text-align:center; padding:20px;'>Cart Empty</p>";
-            else {
-                cart.forEach((item, i) => {
-                    total += item.price;
-                    list.innerHTML += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #eee;">
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <img src="${item.image}" style="width:40px; height:40px; object-fit:contain;">
-                                <div><b>${item.name}</b><br>₹${item.price}</div>
-                            </div>
-                            <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="removeFromCart(${i})"></i>
-                        </div>`;
-                });
-            }
-            document.getElementById('cartTotal').innerText = "Total: ₹" + total.toLocaleString();
-            document.getElementById('cartModal').style.display = 'flex';
-        }
-        function removeFromCart(i) { cart.splice(i, 1); openCart(); updateCartUI(); }
-
-        // --- RANDOM OTP NOTIFICATION LOGIC ---
-        function openLogin() {
-            if(isLoggedIn) { alert("Already Logged In"); return; }
-            document.getElementById('loginModal').style.display = 'flex';
-            document.getElementById('loginStep1').style.display = 'block';
-            document.getElementById('loginStep2').style.display = 'none';
-        }
-
-        function sendOtp() {
-            const num = document.getElementById('mobileNumber').value;
-            if(num.length < 10) { alert("Enter valid number"); return; }
-            
-            // GENERATE RANDOM OTP
-            generatedOtp = Math.floor(1000 + Math.random() * 9000);
-
-            // SHOW FAKE SMS POPUP WITH DYNAMIC OTP
-            const smsPopup = document.getElementById('smsPopup');
-            document.getElementById('popupOtpValue').innerText = generatedOtp; // Set new OTP
-            
-            smsPopup.style.top = "20px"; // Slide Down
-            setTimeout(() => { smsPopup.style.top = "-100px"; }, 5000); // Slide Up
-
-            document.getElementById('loginStep1').style.display = 'none';
-            document.getElementById('loginStep2').style.display = 'block';
-            document.getElementById('otpMsg').innerText = `OTP Sent to ${num}`;
-        }
-
-        function verifyOtp() {
-            const userOtp = document.getElementById('otpInput').value;
-            if(userOtp == generatedOtp) {
-                isLoggedIn = true;
-                closeModal('loginModal');
-                alert("Login Success! Welcome Mehtab Sir.");
-                document.getElementById('loginBtnDesk').style.display = 'none';
-                document.getElementById('userProfile').style.display = 'block';
-            } else alert("Wrong OTP! Please check the notification again.");
-        }
-
-        function checkout() {
-            if(cart.length===0) return alert("Empty Cart");
-            if(!isLoggedIn) { closeModal('cartModal'); openLogin(); return; }
-            alert("Order Placed Successfully!");
-            cart = []; updateCartUI(); closeModal('cartModal');
-        }
-
-        function logout() {
-            if(confirm("Logout?")) {
-                isLoggedIn = false;
-                document.getElementById('loginBtnDesk').style.display = 'block';
-                document.getElementById('userProfile').style.display = 'none';
-            }
-        }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        initData();
-    </script>
-</body>
-</html>
