@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M/SALAM - The Real Store</title>
+    <title>M/SALAM - Official Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- CSS STYLES --- */
@@ -13,7 +13,9 @@
         /* HEADER */
         header { background-color: #2874f0; position: sticky; top: 0; z-index: 1000; padding: 15px 0; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-        .logo { font-size: 24px; font-weight: 900; font-style: italic; color: #fff; text-decoration: none; cursor: pointer; letter-spacing: 1px; }
+        
+        /* LOGO CHANGED TO PHONE NUMBER */
+        .logo { font-size: 22px; font-weight: 900; font-style: italic; color: #fff; text-decoration: none; cursor: pointer; letter-spacing: 1px; }
         .logo span { color: #ffe500; } 
 
         /* SEARCH BAR */
@@ -28,10 +30,10 @@
         .cart-btn { position: relative; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .cart-count { position: absolute; top: -8px; left: 10px; background: #ff6161; border: 2px solid #fff; color: white; font-size: 10px; padding: 1px 6px; border-radius: 50%; font-weight: bold; }
 
-        /* NOTIFICATION POPUP (SMS STYLE) */
+        /* FAKE SMS POPUP STYLE */
         .sms-notification {
             position: fixed;
-            top: -100px; /* Hidden initially */
+            top: -100px;
             left: 50%;
             transform: translateX(-50%);
             background: #333;
@@ -55,7 +57,7 @@
         .mobile-search-box input { width: 100%; padding: 10px; border: none; outline: none; font-size: 14px; }
         .mobile-search-box button { padding: 10px 15px; background: white; border: none; color: #2874f0; }
 
-        /* CATEGORIES (New Icons) */
+        /* CATEGORIES */
         .categories { display: flex; gap: 15px; overflow-x: auto; background: white; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); justify-content: flex-start; margin-bottom: 10px; }
         .cat-item { text-align: center; cursor: pointer; min-width: 75px; padding: 5px; transition: transform 0.2s; }
         .cat-item:hover { transform: translateY(-3px); color: #2874f0; }
@@ -84,7 +86,7 @@
         .modal-content { background: white; width: 95%; max-width: 450px; padding: 25px; border-radius: 8px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; }
         
-        /* LOGIN & OTP */
+        /* LOGIN */
         .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; font-size: 16px; }
         .action-btn { width: 100%; padding: 14px; background: #fb641b; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 16px; margin-top: 10px; }
 
@@ -116,13 +118,14 @@
         <div class="sms-icon"><i class="fas fa-comment-alt"></i></div>
         <div>
             <div style="font-size:12px; opacity:0.8;">M/SALAM • Now</div>
-            <div style="font-weight:bold;">Your Login OTP is: <span style="color:#2ecc71; font-size:16px;">1234</span></div>
+            <div style="font-weight:bold;">Your Login OTP is: <span id="popupOtpValue" style="color:#2ecc71; font-size:16px;"></span></div>
         </div>
     </div>
 
     <header>
         <div class="navbar">
-            <div class="logo" onclick="renderProducts('all')">M/SALAM <span>Plus</span></div>
+            <div class="logo" onclick="renderProducts('all')">9110050887</div>
+            
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="Search for products, brands...">
                 <button onclick="searchProduct()">Search</button>
@@ -233,7 +236,6 @@
     </div>
 
     <script>
-        // --- 1. CONFIGURATION ---
         const realImages = {
             'mobile': ["https://images.unsplash.com/photo-1592286927505-1def25115558?w=500", "https://images.unsplash.com/photo-1610945699354-d338072159e7?w=500", "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500", "https://images.unsplash.com/photo-1567581935884-3349723552ca?w=500"],
             'fashion': ["https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=500", "https://images.unsplash.com/photo-1551028919-ac7d21422db7?w=500", "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=500", "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?w=500"],
@@ -256,7 +258,7 @@
         let cart = [];
         let isLoggedIn = false;
         let currentProduct = null;
-        let generatedOtp = 1234; // Fixed OTP for Simulation
+        let generatedOtp = 0; // Dynamic OTP Store
 
         function initData() {
             products = [];
@@ -384,7 +386,7 @@
         }
         function removeFromCart(i) { cart.splice(i, 1); openCart(); updateCartUI(); }
 
-        // --- OTP LOGIC (NOTIFICATION STYLE) ---
+        // --- RANDOM OTP NOTIFICATION LOGIC ---
         function openLogin() {
             if(isLoggedIn) { alert("Already Logged In"); return; }
             document.getElementById('loginModal').style.display = 'flex';
@@ -396,14 +398,15 @@
             const num = document.getElementById('mobileNumber').value;
             if(num.length < 10) { alert("Enter valid number"); return; }
             
-            // SHOW FAKE SMS NOTIFICATION
+            // GENERATE RANDOM OTP
+            generatedOtp = Math.floor(1000 + Math.random() * 9000);
+
+            // SHOW FAKE SMS POPUP WITH DYNAMIC OTP
             const smsPopup = document.getElementById('smsPopup');
-            smsPopup.style.top = "20px"; // Slide down
+            document.getElementById('popupOtpValue').innerText = generatedOtp; // Set new OTP
             
-            // Hide after 5 seconds
-            setTimeout(() => {
-                smsPopup.style.top = "-100px"; // Slide up
-            }, 5000);
+            smsPopup.style.top = "20px"; // Slide Down
+            setTimeout(() => { smsPopup.style.top = "-100px"; }, 5000); // Slide Up
 
             document.getElementById('loginStep1').style.display = 'none';
             document.getElementById('loginStep2').style.display = 'block';
@@ -411,13 +414,14 @@
         }
 
         function verifyOtp() {
-            if(document.getElementById('otpInput').value == "1234") {
+            const userOtp = document.getElementById('otpInput').value;
+            if(userOtp == generatedOtp) {
                 isLoggedIn = true;
                 closeModal('loginModal');
-                alert("Login Success!");
+                alert("Login Success! Welcome Mehtab Sir.");
                 document.getElementById('loginBtnDesk').style.display = 'none';
                 document.getElementById('userProfile').style.display = 'block';
-            } else alert("Wrong OTP! Check notification (1234)");
+            } else alert("Wrong OTP! Please check the notification again.");
         }
 
         function checkout() {
