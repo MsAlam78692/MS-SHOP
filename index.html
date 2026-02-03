@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M/SALAM - Ultimate Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- CSS STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f1f3f6; padding-bottom: 70px; }
+
+        /* HEADER */
+        header { background-color: #2874f0; position: sticky; top: 0; z-index: 1000; padding: 15px 0; color: white; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        
+        /* Logo */
+        .logo { font-size: 24px; font-weight: 900; font-style: italic; color: #fff; text-decoration: none; cursor: pointer; letter-spacing: 1px; }
+        .logo span { color: #ffe500; } 
+
+        /* DESKTOP Search Bar */
+        .search-bar { flex-grow: 1; margin: 0 30px; display: flex; max-width: 600px; position: relative; }
+        .search-bar input { width: 100%; padding: 10px; border: none; border-radius: 2px 0 0 2px; outline: none; color: #333; }
+        .search-bar button { padding: 10px 20px; background-color: #fff; color: #2874f0; border: none; cursor: pointer; border-radius: 0 2px 2px 0; }
+
+        /* User & Cart Options */
+        .nav-options { display: flex; align-items: center; gap: 25px; font-weight: bold; }
+        .login-btn { background: white; color: #2874f0; padding: 5px 20px; border: 1px solid #fff; cursor: pointer; font-weight: bold; border-radius: 2px; }
+        .user-name { cursor: pointer; display: none; } 
+        
+        .cart-btn { position: relative; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .cart-count { position: absolute; top: -8px; left: 8px; background: #ff6161; border: 1px solid #fff; color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; }
+
+        /* MOBILE SEARCH BAR (New Addition) */
+        .mobile-search-container {
+            display: none; /* Desktop par nahi dikhega */
+            background-color: #2874f0;
+            padding: 0 10px 10px 10px;
+            position: sticky;
+            top: 60px; /* Header height ke neeche */
+            z-index: 999;
+        }
+        .mobile-search-box {
+            display: flex;
+            width: 100%;
+            background: white;
+            border-radius: 2px;
+        }
+        .mobile-search-box input {
+            width: 100%; padding: 10px; border: none; outline: none;
+        }
+        .mobile-search-box button {
+            padding: 10px; background: white; border: none; color: #2874f0;
+        }
+
+        /* CATEGORIES STRIP */
+        .categories { display: flex; gap: 10px; overflow-x: auto; background: white; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); justify-content: center; }
+        .cat-item { text-align: center; cursor: pointer; min-width: 80px; padding: 5px; transition: 0.2s; }
+        .cat-item:hover { color: #2874f0; }
+        .cat-img { width: 50px; height: 50px; border-radius: 50%; background: #e0e0e0; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .cat-img img { width: 100%; height: 100%; object-fit: cover; }
+        .cat-name { font-size: 12px; font-weight: bold; }
+
+        /* PRODUCT GRID */
+        .product-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; padding: 15px; max-width: 1200px; margin: 0 auto; }
+        .product-card { background: white; border-radius: 4px; padding: 15px; cursor: pointer; transition: transform 0.2s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
+        
+        .prod-img-box { height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .prod-img-box img { max-height: 100%; max-width: 100%; object-fit: contain; }
+
+        .brand-tag { font-size: 10px; color: #878787; text-transform: uppercase; font-weight: bold; }
+        .prod-title { font-size: 14px; color: #212121; margin: 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .prod-price { font-size: 18px; font-weight: bold; color: #212121; }
+        .prod-discount { font-size: 12px; color: #388e3c; font-weight: bold; margin-left: 10px; }
+        
+        .btn-row { display: flex; gap: 5px; margin-top: 10px; }
+        .add-cart-btn { flex: 1; padding: 8px; border: 1px solid #ff9f00; background: white; color: #ff9f00; font-weight: bold; cursor: pointer; }
+        .buy-now-btn { flex: 1; padding: 8px; border: none; background: #fb641b; color: white; font-weight: bold; cursor: pointer; }
+
+        /* MODALS (Login, Cart, Order) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 95%; max-width: 500px; padding: 20px; border-radius: 5px; max-height: 90vh; overflow-y: auto; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #333; }
+
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 10px 0; }
+        .cart-total { font-size: 20px; font-weight: bold; margin-top: 20px; text-align: right; border-top: 2px solid #eee; padding-top: 10px; }
+        .checkout-btn { width: 100%; background: #fb641b; color: white; padding: 15px; border: none; font-size: 16px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; }
+
+        /* Bottom Nav */
+        .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); justify-content: space-around; padding: 8px 0; z-index: 999; }
+        .nav-item { text-align: center; font-size: 10px; color: #555; cursor: pointer; }
+        .nav-item i { font-size: 18px; display: block; margin-bottom: 3px; }
+
+        /* RESPONSIVE CSS (The Fix) */
+        @media (max-width: 768px) {
+            header { padding: 10px 0; }
+            .search-bar { display: none; } /* Hide DESKTOP search */
+            .mobile-search-container { display: block; } /* Show MOBILE search */
+            
+            .nav-options { display: none; } /* Hide desktop menu */
+            .bottom-nav { display: flex; }
+            .product-container { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 8px; }
+            .add-cart-btn { display: none; } 
+            
+            /* Logo chota karo mobile pe */
+            .logo { font-size: 20px; margin-left: 10px;}
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <div class="logo" onclick="loadProducts('all')">M/SALAM <span>Plus</span></div>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search for products, brands and more">
+                <button onclick="searchProduct()"><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="nav-options">
+                <button id="loginBtn" class="login-btn" onclick="openLoginModal()">Login</button>
+                <div id="userProfile" class="user-name" onclick="logout()">
+                    Hi, Mehtab <i class="fas fa-caret-down"></i>
+                </div>
+                
+                <div class="cart-btn" onclick="openCart()">
+                    <i class="fas fa-shopping-cart"></i> Cart
+                    <span class="cart-count" id="cartBadge">0</span>
+                </div>
+            </div>
+            
+            <div style="display:flex; gap:15px; margin-right:10px;" class="mobile-only-icons">
+                 <i class="fas fa-shopping-cart" style="font-size:20px; cursor:pointer;" onclick="openCart()"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-search-container">
+        <div class="mobile-search-box">
+             <input type="text" id="mobileSearchInput" placeholder="Search brands, mobiles, shoes...">
+             <button onclick="searchProduct()"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+
+    <div class="categories">
+        <div class="cat-item" onclick="loadProducts('mobile')">
+            <div class="cat-img"><img src="https://placehold.co/100x100/3498db/FFF?text=Mobile" alt="Mobile"></div>
+            <div class="cat-name">Mobiles</div>
+        </div>
+        <div class="cat-item" onclick="loadProducts('fashion')">
+            <div class="cat-img"><img src="https://placehold.co/100x100/e74c3c/FFF?text=Fashion" alt="Fashion"></div>
+            <div class="cat-name">Fashion</div>
+        </div>
+        <div class="cat-item" onclick="loadProducts('tv')">
+            <div class="cat-img"><img src="https://placehold.co/100x100/2c3e50/FFF?text=TV" alt="TV"></div>
+            <div class="cat-name">TVs</div>
+        </div>
+        <div class="cat-item" onclick="loadProducts('beauty')">
+            <div class="cat-img"><img src="https://placehold.co/100x100/e056fd/FFF?text=Beauty" alt="Beauty"></div>
+            <div class="cat-name">Beauty</div>
+        </div>
+        <div class="cat-item" onclick="loadProducts('shoes')">
+            <div class="cat-img"><img src="https://placehold.co/100x100/f39c12/FFF?text=Shoes" alt="Shoes"></div>
+            <div class="cat-name">Shoes</div>
+        </div>
+    </div>
+
+    <div class="product-container" id="productGrid">
+        </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+            <h2 style="color:#2874f0; text-align: center;">Login</h2>
+            <p style="text-align:center; color:#777; font-size:12px;">Login to access your orders</p>
+            <div style="margin-top:20px;">
+                <input type="text" id="loginUser" placeholder="Enter Name (e.g., Mehtab)" class="login-input">
+                <button onclick="performLogin()" style="width:100%; padding:12px; background:#fb641b; color:white; border:none; font-weight:bold; cursor:pointer;">LOGIN</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('cartModal')">&times;</span>
+            <h2>My Cart <i class="fas fa-shopping-cart"></i></h2>
+            <div id="cartItemsList" style="margin-top:15px; max-height: 300px; overflow-y:auto;">
+                <p style="text-align:center; padding:20px;">Your cart is empty!</p>
+            </div>
+            <div class="cart-total" id="cartTotalDisplay">Total: ₹0</div>
+            <button class="checkout-btn" onclick="checkoutProcess()">PLACE ORDER</button>
+        </div>
+    </div>
+
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('orderModal')">&times;</span>
+            <div id="orderStep1">
+                <h2>Shipping Address</h2>
+                <input type="text" placeholder="Name" class="login-input">
+                <input type="text" placeholder="Full Address" class="login-input">
+                <input type="text" placeholder="Mobile Number" class="login-input">
+                <button onclick="confirmOrder()" class="checkout-btn" style="background:#2874f0;">CONFIRM ORDER</button>
+            </div>
+            <div id="orderStep2" style="display:none; text-align:center;">
+                <i class="fas fa-check-circle" style="font-size:60px; color:#2ecc71; margin-bottom:20px;"></i>
+                <h2 style="color:#2874f0;">Order Successful!</h2>
+                <p>Thank you, <span id="orderUserName">Sir</span>.</p>
+                <p>Your delivery is on the way.</p>
+                <button onclick="closeModal('orderModal')" style="margin-top:20px; padding:10px 20px; border:none; background:#2874f0; color:white;">Shop More</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="loadProducts('all')"><i class="fas fa-home"></i>Home</div>
+        <div class="nav-item" onclick="alert('Categories Page')"><i class="fas fa-th-large"></i>Cats</div>
+        <div class="nav-item" onclick="openLoginModal()"><i class="fas fa-user"></i>Account</div>
+        <div class="nav-item" onclick="openCart()"><i class="fas fa-shopping-cart"></i>Cart <span id="mobileCartCount" style="color:red; font-weight:bold;">(0)</span></div>
+    </div>
+
+    <script>
+        // Brands & Data
+        const brands = {
+            'mobile': ['Apple', 'Samsung', 'Oppo', 'Vivo', 'Xiaomi', 'Realme', 'OnePlus'],
+            'fashion': ['Nike', 'Adidas', 'Puma', 'Zara', 'Gucci', 'Levis', 'H&M'],
+            'tv': ['Sony', 'LG', 'Samsung', 'Mi', 'OnePlus', 'Vu'],
+            'beauty': ['Lakme', 'Maybelline', 'Loreal', 'Nivea', 'Mamaearth'],
+            'shoes': ['Nike', 'Adidas', 'Reebok', 'Bata', 'Puma', 'Woodland']
+        };
+
+        const colors = ['2874f0', '8e44ad', '2ecc71', 'e74c3c', 'f39c12', '34495e'];
+        let products = [];
+        let cart = [];
+        let isLoggedIn = false;
+        let currentUser = "";
+
+        // Generate Data
+        function generateData() {
+            products = [];
+            const categories = Object.keys(brands);
+            categories.forEach(cat => {
+                for(let i=1; i<=200; i++) {
+                    const brand = brands[cat][Math.floor(Math.random() * brands[cat].length)];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const imgUrl = `https://placehold.co/400x400/${color}/FFFFFF?text=${brand}`;
+
+                    products.push({
+                        id: Date.now() + Math.random(),
+                        category: cat,
+                        brand: brand,
+                        name: `${brand} ${cat} Pro ${i}`,
+                        price: Math.floor(Math.random() * 50000) + 999,
+                        image: imgUrl
+                    });
+                }
+            });
+            loadProducts('all');
+        }
+
+        // Display Products
+        function loadProducts(filter) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = "";
+            window.scrollTo(0,0);
+
+            let filtered = (filter === 'all') ? products : products.filter(p => p.category === filter);
+            filtered = filtered.sort(() => 0.5 - Math.random()).slice(0, 100);
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="prod-img-box"><img src="${p.image}" alt="${p.brand}"></div>
+                    <div class="brand-tag">${p.brand}</div>
+                    <div class="prod-title">${p.name}</div>
+                    <div class="prod-price">₹${p.price.toLocaleString()} <span class="prod-discount">20% Off</span></div>
+                    <div class="btn-row">
+                        <button class="add-cart-btn" onclick="addToCart('${p.id}')">ADD</button>
+                        <button class="buy-now-btn" onclick="buyNow('${p.id}')">BUY</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- FIXED SEARCH FUNCTION ---
+        function searchProduct() {
+            // Check both Desktop input and Mobile input
+            let query = document.getElementById('searchInput').value.toLowerCase();
+            if(!query) {
+                query = document.getElementById('mobileSearchInput').value.toLowerCase();
+            }
+
+            if(!query) {
+                alert("Please type something to search!");
+                return;
+            }
+
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = "";
+            const results = products.filter(p => p.brand.toLowerCase().includes(query) || p.category.includes(query));
+            
+            if(results.length === 0) {
+                grid.innerHTML = `<h3 style="padding:20px;">No results found for "${query}"</h3>`;
+                return;
+            }
+
+            results.slice(0, 50).forEach(p => {
+                 const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="prod-img-box"><img src="${p.image}" alt="${p.brand}"></div>
+                    <div class="brand-tag">${p.brand}</div>
+                    <div class="prod-title">${p.name}</div>
+                    <div class="prod-price">₹${p.price.toLocaleString()}</div>
+                    <div class="btn-row">
+                        <button class="add-cart-btn" onclick="addToCart('${p.id}')">ADD</button>
+                        <button class="buy-now-btn" onclick="buyNow('${p.id}')">BUY</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Cart & Buy Logic
+        function addToCart(pid) {
+            const item = products.find(p => p.id == pid);
+            cart.push(item);
+            updateCartUI();
+            alert("Added to Cart!");
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartBadge').innerText = cart.length;
+            document.getElementById('mobileCartCount').innerText = `(${cart.length})`;
+        }
+
+        function openCart() {
+            const list = document.getElementById('cartItemsList');
+            const totalDisplay = document.getElementById('cartTotalDisplay');
+            list.innerHTML = "";
+            let total = 0;
+            if(cart.length === 0) {
+                list.innerHTML = '<p style="text-align:center; padding:20px;">Cart is Empty</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    const div = document.createElement('div');
+                    div.className = 'cart-item';
+                    div.innerHTML = `
+                        <div><b>${item.name}</b><br>₹${item.price}</div>
+                        <button onclick="removeFromCart(${index})" style="color:red;border:none;background:none;"><i class="fas fa-trash"></i></button>
+                    `;
+                    list.appendChild(div);
+                });
+            }
+            totalDisplay.innerText = "Total: ₹" + total.toLocaleString();
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            openCart();
+            updateCartUI();
+        }
+
+        function buyNow(pid) { addToCart(pid); openCart(); }
+
+        function checkoutProcess() {
+            if(cart.length === 0) { alert("Cart Empty"); return; }
+            if(!isLoggedIn) { alert("Please Login First"); closeModal('cartModal'); openLoginModal(); } 
+            else { closeModal('cartModal'); document.getElementById('orderModal').style.display = 'flex'; }
+        }
+
+        function confirmOrder() {
+            document.getElementById('orderStep1').style.display = 'none';
+            document.getElementById('orderStep2').style.display = 'block';
+            document.getElementById('orderUserName').innerText = currentUser;
+            cart = []; updateCartUI();
+        }
+
+        function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        
+        function performLogin() {
+            const name = document.getElementById('loginUser').value;
+            if(name) {
+                currentUser = name; isLoggedIn = true;
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('userProfile').style.display = 'block';
+                document.getElementById('userProfile').innerHTML = `Hi, ${name}`;
+                closeModal('loginModal');
+                alert("Login Success!");
+            }
+        }
+
+        function logout() {
+            if(confirm("Logout?")) {
+                isLoggedIn = false; currentUser = "";
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('userProfile').style.display = 'none';
+                cart = []; updateCartUI();
+            }
+        }
+
+        generateData();
+    </script>
+</body>
+</html>
